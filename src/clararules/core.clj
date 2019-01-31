@@ -23,6 +23,10 @@
   [?groupuser <- GroupUser (= ?my-group-name group-name)]
   [?user <- User (= (:user-name ?groupuser) name)])
 
+(defquery find-all-user
+  []
+  [?user <- User])
+
 (def session
   (-> (mk-session 'clararules.core)
       (insert (->User "Will" "wravel@mail.com")
@@ -35,9 +39,12 @@
               (->GroupUser :client "Client a"))
       (fire-rules)))
 
+(def session (insert session (->User "User 4" "user4@mail.com")))
+
 (comment
   (query session find-user-by-group :?my-group-name :home)
   (query session find-user-by-group :?my-group-name :client)
+  (query session find-all-user)
   (query session get-user-from-name :?name "Will")
   (query session find-group-by-name :?name :home)
   )
