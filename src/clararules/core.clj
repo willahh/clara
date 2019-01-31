@@ -1,17 +1,9 @@
 (ns clararules.core
   (:require [clara.rules :refer :all]))
 
-(defrecord SupportRequest [client level])
-(defrecord ClientRepresentative [name client])
-
 (defrecord User [name email])
 (defrecord Group [name])
 (defrecord GroupUser [group-name user-name])
-
-(defrule is-will
-  [User (= "Will" name)]
-  =>
-  (println "User is Will"))
 
 (defrule has-email
   [User (= "wravel@mail.com" email)]
@@ -43,36 +35,11 @@
               (->GroupUser :client "Client a"))
       (fire-rules)))
 
-(query session find-user-by-group :?my-group-name :home)
-(query session find-user-by-group :?my-group-name :client)
-(query session get-user-from-name :?name "Will")
-(query session find-group-by-name :?name :home)
+(comment
+  (query session find-user-by-group :?my-group-name :home)
+  (query session find-user-by-group :?my-group-name :client)
+  (query session get-user-from-name :?name "Will")
+  (query session find-group-by-name :?name :home)
+  )
 
 
-
-
-
-;; (defrule is-important
-;;   "Find important support requests."
-;;   [SupportRequest (= :high level)]
-;;   =>
-;;   (println "High support requested!"))
-
-;; (defrule notify-client-rep
-;;   "Find the client representative and request support."
-;;   [SupportRequest (= ?client client)]
-;;   [ClientRepresentative (= ?client client) (= ?name name)]
-;;   =>
-;;   (println "Notify" ?name "that"  
-;;            ?client "has a new support request!"))
-
-;; (-> (mk-session 'clararules.core)
-;;     (insert (->ClientRepresentative "Alice" "Acme")
-;;             (->SupportRequest "Acme" :high))
-;;     (fire-rules))
-
-
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
